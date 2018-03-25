@@ -3,12 +3,18 @@ package com.flyingstudio.cumtbrowser.fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.flyingstudio.cumtbrowser.R;
+import com.flyingstudio.cumtbrowser.adapter.FragmentAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +34,8 @@ public class MainFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private ViewPager viewPager;
+    private List<Fragment>fragments=new ArrayList<>();
     private OnFragmentInteractionListener mListener;
 
     public MainFragment() {
@@ -76,14 +84,12 @@ public class MainFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        viewPager = getView().findViewById(R.id.viewPager);
+        fragments.add(new NavFragment());
+        fragments.add(new NewsFragment());
+        viewPager.setAdapter(new FragmentAdapter(getChildFragmentManager(),fragments));
     }
 
     @Override
