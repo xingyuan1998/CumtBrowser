@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context="com.flyingstudio.cumtbrowser.MainActivity"
     android:orientation="vertical">
 
@@ -21,16 +23,38 @@
 
     <!--</android.support.design.widget.AppBarLayout>-->
 
+    <!--<EditText-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:hint="搜索或输入网址"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="10dp"-->
+        <!--android:background="@drawable/shape_edittext"-->
+        <!--android:inputType="textNoSuggestions"-->
+        <!--android:singleLine="true"-->
+        <!--android:textColor="#000"-->
+        <!--android:textCursorDrawable="@null"-->
+        <!--android:id="@+id/edit_text"/>-->
+
+
+
+
     <com.flyingstudio.cumtbrowser.bar.SearchBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/serach_bar"></com.flyingstudio.cumtbrowser.bar.SearchBar>
 
-    <include
-        layout="@layout/content_main"
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_width="match_parent"/>
+        android:id="@+id/show_fragment">
+    </FrameLayout>
+
+    <!--<include-->
+        <!--layout="@layout/content_main"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:layout_width="match_parent"/>-->
 
     <!--<android.support.design.widget.FloatingActionButton-->
         <!--android:id="@+id/fab"-->

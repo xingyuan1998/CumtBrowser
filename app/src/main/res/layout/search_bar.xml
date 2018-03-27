@@ -3,9 +3,15 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/shape"
-    android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:background="@drawable/shape">
+
+    <Button
+        android:id="@+id/btn_code2d"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:background="@drawable/code2d"/>
 
     <EditText
         android:layout_width="0dp"
@@ -17,6 +23,7 @@
         android:layout_gravity="center_vertical"
         android:background="@null"
         android:singleLine="true"
+        android:textColor="#000"
         android:textCursorDrawable="@null"/>
 
     <Button
@@ -40,6 +47,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/btn_cancel"
         android:text="取消"
+        android:textColor="#000"
         android:background="@null"/>
 
     <Button
@@ -48,6 +56,7 @@
         android:id="@+id/btn_baidu"
         android:visibility="gone"
         android:text="百度一下"
+        android:textColor="#000"
         android:background="@null"/>
 
     <Button
@@ -56,6 +65,7 @@
         android:id="@+id/btn_access"
         android:visibility="gone"
         android:text="访问"
+        android:textColor="#000"
         android:background="@null"/>
 
 </LinearLayout>

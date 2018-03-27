@@ -1,19 +1,32 @@
 package com.flyingstudio.cumtbrowser.bar;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 
 import com.flyingstudio.cumtbrowser.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
@@ -50,11 +63,15 @@ public class SearchBar extends LinearLayout implements View.OnClickListener{
                 listener.record();
                 if (hasFocus){
                     btn_delete_input.setVisibility(VISIBLE);
+                    Log.d(TAG, "onFocusChange: 获取焦点");
                 }else {
                     btn_delete_input.setVisibility(GONE);
+                    Log.d(TAG, "onFocusChange: 没获取焦点");
                 }
             }
         });
+
+        
 
         edit_serach.addTextChangedListener(new TextWatcher() {
             @Override
@@ -111,15 +128,21 @@ public class SearchBar extends LinearLayout implements View.OnClickListener{
             case R.id.btn_cancel:
 //                Toast.makeText(getContext(),"取消",Toast.LENGTH_SHORT).show();
                 listener.cancel();
+                edit_serach.setFocusable(true);
+                edit_serach.setFocusableInTouchMode(true);
+                edit_serach.requestFocus();
+                edit_serach.findFocus();
                 break;
             case R.id.btn_baidu:
                 input=edit_serach.getText().toString();
                 listener.baidu(input);
+                edit_serach.setText("");
 //                Toast.makeText(getContext(),"百度一下",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btn_access:
                 input=edit_serach.getText().toString();
                 listener.access(input);
+                edit_serach.setText("");
                 break;
             default:
                 break;
