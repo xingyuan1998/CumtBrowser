@@ -1,6 +1,8 @@
 package com.flyingstudio.cumtbrowser.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +15,7 @@ import android.widget.ListView;
 
 import com.flyingstudio.cumtbrowser.R;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -65,5 +68,19 @@ public class HistoryFragment extends Fragment {
 
     public interface clearHistoryListener{
         void clear();
+    }
+
+    @Override
+    public void onDestroy() {
+        // 保存历史记录
+        SharedPreferences.Editor editor=getContext().getSharedPreferences("history",
+                Context.MODE_PRIVATE).edit();
+        editor.putInt("size",stringList.size());
+        for (int i=0;i<stringList.size();i++){
+            editor.putString(i+"",stringList.get(i));
+        }
+        editor.apply();
+
+        super.onDestroy();
     }
 }

@@ -4,9 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context="com.flyingstudio.cumtbrowser.BrowserActivity">
 
-    <include layout="@layout/header" />
+    <com.flyingstudio.cumtbrowser.bar.SearchBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/serach_bar"></com.flyingstudio.cumtbrowser.bar.SearchBar>
+
+    <!--<include layout="@layout/header" />-->
 
     <FrameLayout
         android:id="@+id/fragment"
@@ -15,15 +22,16 @@
         android:layout_height="0dp">
     </FrameLayout>
 
-    <LinearLayout
-        android:layout_weight="1"
-        android:orientation="vertical"
+    <!--<LinearLayout-->
+        <!--android:layout_weight="1"-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp">-->
+        <!--<include layout="@layout/footer" />-->
+    <!--</LinearLayout>-->
+
+    <com.flyingstudio.cumtbrowser.bar.BottomBar
         android:layout_width="match_parent"
-        android:layout_height="0dp">
-        <include layout="@layout/footer" />
-    </LinearLayout>
-
-
-
-
+        android:layout_height="wrap_content"
+        android:id="@+id/bottom_bar"></com.flyingstudio.cumtbrowser.bar.BottomBar>
 </LinearLayout>
