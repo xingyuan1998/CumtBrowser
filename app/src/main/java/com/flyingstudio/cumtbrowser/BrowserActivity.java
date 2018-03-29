@@ -36,7 +36,6 @@ public class BrowserActivity extends AppCompatActivity implements
         SearchBar.onClickSearchBarListener,BottomBar.onClickBottomBarListener,
         HistoryFragment.clearHistoryListener {
     private BrowserFragment browserFragment;
-//    private Button button;
     private Fragment fragment;
     private static final String TAG = "BrowserActivity";
     private String input;//输入的内容
@@ -52,19 +51,8 @@ public class BrowserActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_browser);
 
         replaceFragment(MainFragment.newInstance("dd","dd"));
-//        button = findViewById(R.id.change_fragment);
         browserFragment = new BrowserFragment();
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                replaceFragment(browserFragment,R.id.fragment);
-//            }
-//        });
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
         //接收上次的历史记录
         SharedPreferences preferences=getSharedPreferences("history",
                 Context.MODE_PRIVATE);
@@ -80,23 +68,6 @@ public class BrowserActivity extends AppCompatActivity implements
         bottomBar.setOnClickBottomBarListener(this);
         historyFragment=new HistoryFragment(historyRecords);
         historyFragment.setClearHistoryListener(this);
-//        edit_text=(EditText)findViewById(R.id.edit_text);
-
-//        edit_text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                showSearchBarAndHistory();
-//            }
-//        });
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
     }
 
 
@@ -116,12 +87,6 @@ public class BrowserActivity extends AppCompatActivity implements
         }
     }
 
-    //    private void showSearchBarAndHistory() {
-//        edit_text.setVisibility(View.GONE);
-//        searchBar.setVisibility(View.VISIBLE);
-//        bottomBar.setVisibility(View.GONE);
-//    }
-
     //碎片更换
     private void replaceFragment(Fragment fragment){
         FragmentManager manager=getSupportFragmentManager();
@@ -133,32 +98,20 @@ public class BrowserActivity extends AppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
-
-//    public void replaceFragment(Fragment fragment,int id){
-//        FragmentManager manager = getSupportFragmentManager();
-//        FragmentTransaction transaction = manager.beginTransaction();
-//        transaction.replace(R.id.fragment, fragment);
-//        transaction.commit();
-//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
