@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.flyingstudio.cumtbrowser.R;
+import com.flyingstudio.cumtbrowser.adapter.HistoryAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,9 +28,9 @@ import java.util.List;
 
 @SuppressLint("ValidFragment")
 public class HistoryFragment extends Fragment {
-    private ArrayAdapter<String> adapter;
+    private HistoryAdapter adapter;
     private List<String> stringList;
-    private ListView listView;
+    private RecyclerView recyclerView;
     private Button button;
     private clearHistoryListener listener;
 
@@ -41,8 +44,12 @@ public class HistoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.serach_history,container,false);
-        adapter=new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_list_item_1,stringList);
+
+        recyclerView=(RecyclerView)view.findViewById(R.id.history_recycler_view);
+        LinearLayoutManager layoutManager=new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        adapter=new HistoryAdapter(stringList);
+
         button=(Button)view.findViewById(R.id.btn_clear_history);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,9 +59,7 @@ public class HistoryFragment extends Fragment {
                 adapter.notifyDataSetChanged();
             }
         });
-        listView=(ListView)view.findViewById(R.id.history_view);
-        listView.setAdapter(adapter);
-//        listView.addFooterView(button);
+        recyclerView.setAdapter(adapter);
         return view;
     }
 

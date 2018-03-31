@@ -1,20 +1,21 @@
-package com.flyingstudio.cumtbrowser.bar;
+package com.flyingstudio.cumtbrowser.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flyingstudio.cumtbrowser.R;
+import com.flyingstudio.cumtbrowser.bar.MyButton;
 
 import java.util.List;
 
 /**
  * Created by MEzzsy on 2018/3/25.
+ * 用于适配底部导航栏的设置按钮的RecyclerView
  */
 
 public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ViewHolder> {

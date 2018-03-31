@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -35,8 +36,8 @@ import java.util.List;
 public class BrowserActivity extends AppCompatActivity implements
         SearchBar.onClickSearchBarListener,BottomBar.onClickBottomBarListener,
         HistoryFragment.clearHistoryListener {
-    private BrowserFragment browserFragment;
     private Fragment fragment;
+    private BrowserFragment browserFragment;
     private static final String TAG = "BrowserActivity";
     private String input;//输入的内容
     private SearchBar searchBar;//搜索栏
@@ -44,14 +45,14 @@ public class BrowserActivity extends AppCompatActivity implements
     private List<String> historyRecords=new ArrayList<>();//历史记录的列表
     private HistoryFragment historyFragment;//历史记录碎片
     private final static int CODE=1028;
+    private FragmentManager manager=getSupportFragmentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browser);
 
-        replaceFragment(MainFragment.newInstance("dd","dd"));
-        browserFragment = new BrowserFragment();
+        replaceFragment(new MainFragment());
 
         //接收上次的历史记录
         SharedPreferences preferences=getSharedPreferences("history",
@@ -61,6 +62,10 @@ public class BrowserActivity extends AppCompatActivity implements
             historyRecords.add(preferences.getString(i+"",""));
         }
 
+        initView();
+    }
+
+    private void initView() {
         searchBar=(SearchBar)findViewById(R.id.serach_bar);
         input=searchBar.getInput();
         searchBar.setOnClickSearchBarListener(this);
@@ -71,9 +76,9 @@ public class BrowserActivity extends AppCompatActivity implements
     }
 
 
-
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(
+            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
             case 1:
                 if (grantResults.length>0&&grantResults[0]==PackageManager.PERMISSION_GRANTED){
@@ -89,7 +94,6 @@ public class BrowserActivity extends AppCompatActivity implements
 
     //碎片更换
     private void replaceFragment(Fragment fragment){
-        FragmentManager manager=getSupportFragmentManager();
         FragmentTransaction transaction=manager.beginTransaction();
         transaction.replace(R.id.fragment,fragment);
         transaction.addToBackStack(null);
@@ -100,17 +104,6 @@ public class BrowserActivity extends AppCompatActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -144,12 +137,15 @@ public class BrowserActivity extends AppCompatActivity implements
     //按钮取消的逻辑
     @Override
     public void cancel() {
-        //移除历史记录的碎片
-        if (!historyFragment.isDetached()) {
-            FragmentManager manager = getSupportFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            transaction.remove(historyFragment);
-            transaction.commit();
+//        //移除历史记录的碎片
+        Log.d(TAG, "cancel:isDetached "+historyFragment.isDetached());
+        Log.d(TAG, "cancel:isInLayout "+historyFragment.isInLayout());
+        Log.d(TAG, "cancel:isAdded "+historyFragment.isAdded());
+        Log.d(TAG, "cancel:isRemoving "+historyFragment.isRemoving());
+        Log.d(TAG, "cancel:isResumed "+historyFragment.isResumed());
+        if (historyFragment.isAdded()) {
+            onBackPressed();
+//            Log.d(TAG, "cancel: ");
         }
     }
 
@@ -178,20 +174,18 @@ public class BrowserActivity extends AppCompatActivity implements
 
     @Override
     public void back() {
-        Toast.makeText(this,"你点了返回",Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "你点了返回");
+        browserFragment.getWebView().goBack();
     }
 
     @Override
     public void forward() {
-        Toast.makeText(this,"你点了向前",Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "你点了向前");
+        browserFragment.getWebView().goForward();
     }
 
     @Override
     public void home() {
-        Toast.makeText(this,"你点了home",Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "你点了home");
+        replaceFragment(new MainFragment());
+        searchBar.setSearchBarText(null);
     }
 
     @Override
@@ -204,14 +198,27 @@ public class BrowserActivity extends AppCompatActivity implements
     @Override
     public void clear() {
         historyRecords.clear();
-//        Log.d(TAG, "清空历史记录");
     }
 
     //百度一下和访问按钮的具体逻辑
     private void baiduORaccess(String input){
         historyRecords.add(0,input);//使最新的记录放在最开头
-//        Collections.reverse(historyRecords);
         historyFragment.dataChanged();
+        browserFragment =new BrowserFragment(input);
+        replaceFragment(browserFragment);
+        browserFragment.setOnFragmentInteractionListener(
+                new BrowserFragment.OnFragmentInteractionListener() {
+                    @Override
+                    public void onFragmentInteraction(Uri uri) {
+
+                    }
+
+                    //实时地在搜索栏显示当前网址
+                    @Override
+                    public void changeCurrentUrl(String s) {
+                        searchBar.setSearchBarText(s);
+                    }
+                });
     }
 
     //可以偷懒的Toast
@@ -223,6 +230,5 @@ public class BrowserActivity extends AppCompatActivity implements
     public void onBackPressed() {
         super.onBackPressed();
         searchBar.loseFocus();
-//        bottomBar.setVisibility(View.VISIBLE);
     }
 }

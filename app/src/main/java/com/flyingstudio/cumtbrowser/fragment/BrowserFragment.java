@@ -1,48 +1,64 @@
 package com.flyingstudio.cumtbrowser.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.flyingstudio.cumtbrowser.R;
 
+import static android.content.ContentValues.TAG;
+
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link BrowserFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link BrowserFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * 网页的碎片
  */
 public class BrowserFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
+    private WebView webView;
     private String mParam1;
     private String mParam2;
-
     private OnFragmentInteractionListener mListener;
+    private String input;
 
     public BrowserFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment BrowserFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+    public WebView getWebView() {
+        return webView;
+    }
+
+    @SuppressLint("ValidFragment")
+    public BrowserFragment(String content){
+        content=content.trim();
+        input=content;
+        if (Patterns.WEB_URL.matcher(content).matches()) {
+            if ((input.indexOf("http://"))!=-1||(input.indexOf("https://"))!=-1){
+                input = content;
+            }else {
+                input="https://"+input;
+            }
+        }else {
+            input=content;
+        }
+    }
+
+//    public String getCurrentUrl(){
+//        return webView.getUrl();
+//    }
+
     public static BrowserFragment newInstance(String param1, String param2) {
         BrowserFragment fragment = new BrowserFragment();
         Bundle args = new Bundle();
@@ -64,17 +80,29 @@ public class BrowserFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_browser, container, false);
+        View view=inflater.inflate(R.layout.fragment_browser, container, false);
+        webView=(WebView)view.findViewById(R.id.web_view);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                mListener.changeCurrentUrl(url);
+            }
+        });
+        if (Patterns.WEB_URL.matcher(input).matches()) {
+            webView.loadUrl(input);
+        }else {
+            webView.loadUrl("https://www.baidu.com/s?wd="+input+"&ie=UTF-8");
+        }
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
     }
-
 
     @Override
     public void onDetach() {
@@ -82,18 +110,12 @@ public class BrowserFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    public void setOnFragmentInteractionListener(OnFragmentInteractionListener listener){
+        mListener=listener;
+    }
+
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+        void changeCurrentUrl(String s);
     }
 }

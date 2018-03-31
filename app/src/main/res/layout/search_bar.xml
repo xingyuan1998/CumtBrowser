@@ -23,7 +23,9 @@
         android:layout_gravity="center_vertical"
         android:background="@null"
         android:singleLine="true"
+        android:textSize="15sp"
         android:textColor="#000"
+        android:hint="搜索或输入网址"
         android:textCursorDrawable="@null"/>
 
     <Button
