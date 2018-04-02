@@ -55,10 +55,6 @@ public class BrowserFragment extends Fragment {
         }
     }
 
-//    public String getCurrentUrl(){
-//        return webView.getUrl();
-//    }
-
     public static BrowserFragment newInstance(String param1, String param2) {
         BrowserFragment fragment = new BrowserFragment();
         Bundle args = new Bundle();
@@ -77,6 +73,7 @@ public class BrowserFragment extends Fragment {
         }
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
+import com.flyingstudio.cumtbrowser.AllButtonListener;
 import com.flyingstudio.cumtbrowser.R;
 import com.flyingstudio.cumtbrowser.adapter.ButtonAdapter;
 
@@ -23,7 +24,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.app.PendingIntent.getActivity;
 import static android.content.ContentValues.TAG;
 
 /**
@@ -36,22 +36,22 @@ public class BottomBar extends LinearLayout implements View.OnClickListener {
     private ImageButton btn_home;
     private ImageButton btn_all_pages;
     private ImageButton btn_settings;
-    private onClickBottomBarListener listener;
+    private AllButtonListener listener;
     private PopupWindow popupWindow;
-    private List<MyButton> buttonList=new ArrayList<>();
+    private List<MyButton> buttonList = new ArrayList<>();
 
     public BottomBar(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        LayoutInflater.from(context).inflate(R.layout.bottom_bar,this);
+        LayoutInflater.from(context).inflate(R.layout.bottom_bar, this);
         initView();
     }
 
     private void initView() {
-        btn_back=(ImageButton)findViewById(R.id.btn_back);
-        btn_forward=(ImageButton)findViewById(R.id.btn_forward);
-        btn_home=(ImageButton)findViewById(R.id.btn_home);
-        btn_all_pages=(ImageButton)findViewById(R.id.btn_all_pages);
-        btn_settings=(ImageButton)findViewById(R.id.btn_settings);
+        btn_back = (ImageButton) findViewById(R.id.btn_back);
+        btn_forward = (ImageButton) findViewById(R.id.btn_forward);
+        btn_home = (ImageButton) findViewById(R.id.btn_home);
+        btn_all_pages = (ImageButton) findViewById(R.id.btn_all_pages);
+        btn_settings = (ImageButton) findViewById(R.id.btn_settings);
         btn_back.setOnClickListener(this);
         btn_forward.setOnClickListener(this);
         btn_home.setOnClickListener(this);
@@ -62,7 +62,7 @@ public class BottomBar extends LinearLayout implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btn_back:
                 listener.back();
                 break;
@@ -90,20 +90,20 @@ public class BottomBar extends LinearLayout implements View.OnClickListener {
                 inflate(R.layout.popuplayout, null);
         //获取屏幕宽度
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        WindowManager windowManager= (WindowManager) getContext().
+        WindowManager windowManager = (WindowManager) getContext().
                 getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(displayMetrics);
-        int w =displayMetrics.widthPixels-60;
+        int w = displayMetrics.widthPixels - 60;
 
         popupWindow = new PopupWindow(contentView,
                 w, LayoutParams.WRAP_CONTENT, true);
         popupWindow.setContentView(contentView);
 
         //初始化RecyclerView
-        RecyclerView recyclerView=(RecyclerView)contentView.findViewById(R.id.recycler_view);
-        GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(),4);
+        RecyclerView recyclerView = (RecyclerView) contentView.findViewById(R.id.recycler_view);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4);
         recyclerView.setLayoutManager(gridLayoutManager);
-        ButtonAdapter adapter=new ButtonAdapter(buttonList);
+        ButtonAdapter adapter = new ButtonAdapter(buttonList);
         recyclerView.setAdapter(adapter);
 
         //显示PopupWindow
@@ -111,17 +111,17 @@ public class BottomBar extends LinearLayout implements View.OnClickListener {
         popupWindow.setAnimationStyle(R.style.PopupAnimation);
 
         //适配高度
-        int currentHeight=20;
-        if (checkDeviceHasNavigationBar2(getContext())){
-            currentHeight+=this.getHeight()+getNavigationBarHeight();
-        }else {
-            currentHeight+=this.getHeight();
+        int currentHeight = 20;
+        if (checkDeviceHasNavigationBar2(getContext())) {
+            currentHeight += this.getHeight() + getNavigationBarHeight();
+        } else {
+            currentHeight += this.getHeight();
         }
-        Log.d(TAG, "showSettings: "+checkDeviceHasNavigationBar2(getContext()));
-        popupWindow.showAtLocation(this,Gravity.BOTTOM, 0, currentHeight);
+        Log.d(TAG, "showSettings: " + checkDeviceHasNavigationBar2(getContext()));
+        popupWindow.showAtLocation(this, Gravity.BOTTOM, 0, currentHeight);
 
 //        popupWindow.update();
-        Log.d(TAG, "showSettings: "+this.toString()+"\n"+"高度= "+currentHeight);
+        Log.d(TAG, "showSettings: " + this.toString() + "\n" + "高度= " + currentHeight);
     }
 
     //判断设备是否有虚拟按键（navifationbar）。
@@ -160,32 +160,27 @@ public class BottomBar extends LinearLayout implements View.OnClickListener {
 
 
     private void initButtons() {
-        MyButton button1=new MyButton("UI测试",R.drawable.example);
+        MyButton button1 = new MyButton("UI测试", R.drawable.example);
         buttonList.add(button1);
-        MyButton button2=new MyButton("UI测试",R.drawable.example);
+        MyButton button2 = new MyButton("UI测试", R.drawable.example);
         buttonList.add(button2);
-        MyButton button3=new MyButton("UI测试",R.drawable.example);
+        MyButton button3 = new MyButton("UI测试", R.drawable.example);
         buttonList.add(button3);
-        MyButton button4=new MyButton("UI测试",R.drawable.example);
+        MyButton button4 = new MyButton("UI测试", R.drawable.example);
         buttonList.add(button4);
-        MyButton button5=new MyButton("UI测试",R.drawable.example);
+        MyButton button5 = new MyButton("UI测试", R.drawable.example);
         buttonList.add(button5);
-        MyButton button6=new MyButton("UI测试",R.drawable.example);
+        MyButton button6 = new MyButton("UI测试", R.drawable.example);
         buttonList.add(button6);
-        MyButton button7=new MyButton("UI测试",R.drawable.example);
+        MyButton button7 = new MyButton("UI测试", R.drawable.example);
         buttonList.add(button7);
-        MyButton button8=new MyButton("UI测试",R.drawable.example);
+        MyButton button8 = new MyButton("UI测试", R.drawable.example);
         buttonList.add(button8);
     }
 
-    public void setOnClickBottomBarListener(onClickBottomBarListener listener){
-        this.listener=listener;
+    public void setAllButtonListener(AllButtonListener listener) {
+        this.listener = listener;
     }
 
-    public interface onClickBottomBarListener{
-        void back();//返回
-        void forward();//向前
-        void home();//返回到主界面
-        void pages();//页面管理器
-    }
+
 }

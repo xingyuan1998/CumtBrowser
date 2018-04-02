@@ -27,7 +27,7 @@ import java.util.List;
  */
 
 @SuppressLint("ValidFragment")
-public class HistoryFragment extends Fragment {
+public class HistoryFragment extends Fragment implements HistoryAdapter.JumpListener {
     private HistoryAdapter adapter;
     private List<String> stringList;
     private RecyclerView recyclerView;
@@ -36,21 +36,21 @@ public class HistoryFragment extends Fragment {
 
     @SuppressLint("ValidFragment")
     public HistoryFragment(List<String> stringList) {
-        this.stringList=stringList;
+        this.stringList = stringList;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.serach_history,container,false);
+        View view = inflater.inflate(R.layout.serach_history, container, false);
 
-        recyclerView=(RecyclerView)view.findViewById(R.id.history_recycler_view);
-        LinearLayoutManager layoutManager=new LinearLayoutManager(getContext());
+        recyclerView = (RecyclerView) view.findViewById(R.id.history_recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        adapter=new HistoryAdapter(stringList);
-
-        button=(Button)view.findViewById(R.id.btn_clear_history);
+        adapter = new HistoryAdapter(stringList);
+        adapter.setJumpListener(this);
+        button = (Button) view.findViewById(R.id.btn_clear_history);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,29 +63,39 @@ public class HistoryFragment extends Fragment {
         return view;
     }
 
-    public void dataChanged(){
+    public void dataChanged() {
         adapter.notifyDataSetChanged();
     }
 
-    public void setClearHistoryListener(clearHistoryListener listener){
-        this.listener=listener;
+    public void setClearHistoryListener(clearHistoryListener listener) {
+        this.listener = listener;
     }
 
-    public interface clearHistoryListener{
+    @Override
+    public void jump(String content) {
+        listener.jumpAgain(content);
+    }
+
+    public interface clearHistoryListener {
         void clear();
+        void jumpAgain(String content);
     }
 
     @Override
     public void onDestroy() {
         // 保存历史记录
-        SharedPreferences.Editor editor=getContext().getSharedPreferences("history",
+        SharedPreferences.Editor editor = getContext().getSharedPreferences("history",
                 Context.MODE_PRIVATE).edit();
-        editor.putInt("size",stringList.size());
-        for (int i=0;i<stringList.size();i++){
-            editor.putString(i+"",stringList.get(i));
+        editor.putInt("size", stringList.size());
+        for (int i = 0; i < stringList.size(); i++) {
+            editor.putString(i + "", stringList.get(i));
         }
         editor.apply();
 
         super.onDestroy();
+    }
+
+    public HistoryAdapter getAdapter() {
+        return adapter;
     }
 }

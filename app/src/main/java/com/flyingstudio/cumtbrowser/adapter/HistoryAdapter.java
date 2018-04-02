@@ -20,6 +20,7 @@ import static android.content.ContentValues.TAG;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
     private List<String> historyList;
+    private JumpListener listener;
 
     static class ViewHolder extends RecyclerView.ViewHolder{
         TextView history_content;
@@ -46,6 +47,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             public void onClick(View v) {
                 int position =viewHolder.getAdapterPosition();
                 String content= historyList.get(position);
+                listener.jump(content);
                 Log.d(TAG, "历史记录内容为"+content);
             }
         });
@@ -70,4 +72,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     public int getItemCount() {
         return historyList.size();
     }
+
+    public void setJumpListener(JumpListener listener){
+        this.listener=listener;
+    }
+
+    public interface JumpListener{
+        void jump(String content);
+    }
+
 }

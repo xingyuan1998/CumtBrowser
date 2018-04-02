@@ -1,39 +1,21 @@
 package com.flyingstudio.cumtbrowser.bar;
 
-import android.Manifest;
-import android.app.FragmentManager;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.Toast;
 
+import com.flyingstudio.cumtbrowser.AllButtonListener;
 import com.flyingstudio.cumtbrowser.R;
-import com.google.zxing.activity.CaptureActivity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
@@ -50,7 +32,9 @@ public class SearchBar extends LinearLayout implements View.OnClickListener{
     private Button btn_code2d;
     private EditText edit_serach;
     private String input="";
-    private onClickSearchBarListener listener;
+    private AllButtonListener listener;
+    private InputMethodManager inputMethodManager = (InputMethodManager) getContext().
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
 
     public void setSearchBarText(String s){
         edit_serach.setText(s);
@@ -75,10 +59,16 @@ public class SearchBar extends LinearLayout implements View.OnClickListener{
                 if (hasFocus){
                     btn_delete_input.setVisibility(VISIBLE);
                     listener.record();
+                    listener.hideButtomBar();
                     Log.d(TAG, "onFocusChange: 获取焦点");
+                    //显示其软键盘
+                    inputMethodManager.showSoftInput(v,InputMethodManager.SHOW_FORCED);
                 }else {
                     btn_delete_input.setVisibility(GONE);
+                    listener.showButtomBar();
                     Log.d(TAG, "onFocusChange: 没获取焦点");
+                    //隐藏软键盘
+                    inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),0);
                 }
             }
         });
@@ -158,7 +148,7 @@ public class SearchBar extends LinearLayout implements View.OnClickListener{
                 break;
             case R.id.btn_baidu:
                 input=edit_serach.getText().toString();
-                listener.baidu(input);
+                listener.access(input);
                 edit_serach.setText("");
                 edit_serach.setFocusable(false);
 //                Toast.makeText(getContext(),"百度一下",Toast.LENGTH_SHORT).show();
@@ -174,15 +164,8 @@ public class SearchBar extends LinearLayout implements View.OnClickListener{
         }
     }
 
-    public void setOnClickSearchBarListener(onClickSearchBarListener listener){
+    public void setAllButtonListener(AllButtonListener listener) {
         this.listener=listener;
     }
 
-    public interface onClickSearchBarListener{
-        void scan2dCode();//扫描二维码
-        void cancel();//点击取消的逻辑实现
-        void baidu(String input);//点击百度一下的逻辑实现
-        void record();//历史记录的逻辑实现
-        void access(String input);
-    }
 }

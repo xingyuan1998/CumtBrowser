@@ -9,4 +9,10 @@
                 android:color="#7a000000"/>
         </shape>
     </item>
+
+    <item>
+        <shape>
+            <solid android:color="#b9ececec"/>
+        </shape>
+    </item>
 </layer-list>
