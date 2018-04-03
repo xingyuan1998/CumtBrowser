@@ -69,7 +69,6 @@ public class BrowserActivity extends AppCompatActivity implements
         historyFragment.setClearHistoryListener(this);
     }
 
-
     @Override
     public void onRequestPermissionsResult(
             int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -90,7 +89,27 @@ public class BrowserActivity extends AppCompatActivity implements
     private void replaceFragment(Fragment fragment) {
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.fragment, fragment);
-        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    //碎片更换
+    private void addFragment(Fragment fragment) {
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.add(R.id.fragment, fragment);
+        transaction.commit();
+    }
+
+    //隐藏碎片
+    private void hideFragment(Fragment fragment) {
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.hide(fragment);
+        transaction.commit();
+    }
+
+    //显示碎片
+    private void showFragment(Fragment fragment) {
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.show(fragment);
         transaction.commit();
     }
 
@@ -125,10 +144,27 @@ public class BrowserActivity extends AppCompatActivity implements
     //按钮取消的逻辑
     @Override
     public void cancel() {
-        //移除历史记录的碎片
-        if (historyFragment.isAdded()) {
-            onBackPressed();
+        searchBar.loseFocus();
+
+        Fragment currentFragment = manager.findFragmentById(R.id.fragment);
+        Log.d(TAG, "当前的碎片是" + currentFragment.toString());
+
+        if (currentFragment == historyFragment) {
+            if (browserFragment==null||!browserFragment.isAdded()) {
+                home();
+            } else {
+                hideFragment(historyFragment);
+                showFragment(browserFragment);
+            }
         }
+
+        if (currentFragment == browserFragment) {
+            if (historyFragment.isVisible()){
+                hideFragment(historyFragment);
+                showFragment(currentFragment);
+            }
+        }
+
     }
 
     //按钮访问的逻辑
@@ -137,7 +173,6 @@ public class BrowserActivity extends AppCompatActivity implements
         historyRecords.add(0, input);//使最新的记录放在最开头
         historyFragment.dataChanged();
         browserFragment = new BrowserFragment(input);
-        replaceFragment(browserFragment);
         browserFragment.setOnFragmentInteractionListener(
                 new BrowserFragment.OnFragmentInteractionListener() {
                     @Override
@@ -151,6 +186,13 @@ public class BrowserActivity extends AppCompatActivity implements
                         searchBar.setSearchBarText(s);
                     }
                 });
+
+        hideFragment(manager.findFragmentById(R.id.fragment));
+        if (!browserFragment.isAdded()) {
+            addFragment(browserFragment);
+        } else {
+            showFragment(browserFragment);
+        }
     }
 
     @Override
@@ -166,7 +208,12 @@ public class BrowserActivity extends AppCompatActivity implements
     //历史记录
     @Override
     public void record() {
-        replaceFragment(historyFragment);
+        hideFragment(manager.findFragmentById(R.id.fragment));
+        if (!historyFragment.isAdded()) {
+            addFragment(historyFragment);
+        } else {
+            showFragment(historyFragment);
+        }
     }
 
     @Override
@@ -211,8 +258,32 @@ public class BrowserActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+//        super.onBackPressed();
         searchBar.loseFocus();
+
+        Fragment currentFragment = manager.findFragmentById(R.id.fragment);
+        Log.d(TAG, "当前的碎片是" + currentFragment.toString());
+
+        if (currentFragment == historyFragment) {
+            if (browserFragment==null||!browserFragment.isAdded()) {
+                home();
+            } else {
+                hideFragment(historyFragment);
+                showFragment(browserFragment);
+            }
+        }
+
+        if (currentFragment == browserFragment) {
+            if (historyFragment.isVisible()){
+                hideFragment(historyFragment);
+                showFragment(currentFragment);
+            }
+            back();
+        }
+
+        if (currentFragment instanceof MainFragment){
+            finish();
+        }
     }
 
 }
