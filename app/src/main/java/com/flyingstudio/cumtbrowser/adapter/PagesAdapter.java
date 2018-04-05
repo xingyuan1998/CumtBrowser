@@ -51,7 +51,6 @@ public class PagesAdapter extends RecyclerView.Adapter<PagesAdapter.ViewHolder> 
             public void onClick(View v) {
                 int position = viewHolder.getAdapterPosition();
                 listener.jump(position);
-                Log.d(TAG, "位置是" + position);
                 listener.hidePopupWindow();
             }
         });

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -177,8 +176,10 @@ public class BrowserActivity extends AppCompatActivity implements
     //按钮访问的逻辑
     @Override
     public void access(String input) {
-        historyRecords.add(0, input);//使最新的记录放在最开头
-        historyFragment.dataChanged();
+        if (!historyRecords.contains(input)) {
+            historyRecords.add(0, input);//使最新的记录放在最开头
+            historyFragment.dataChanged();
+        }
         browserFragment = new BrowserFragment(input);
         browserFragment.setOnFragmentInteractionListener(
                 new BrowserFragment.OnFragmentInteractionListener() {
@@ -189,16 +190,20 @@ public class BrowserActivity extends AppCompatActivity implements
                     }
                 });
 
-        hideFragment(manager.findFragmentById(R.id.fragment));
+        hideFragment(pageList.get(currentPosition));
         if (!browserFragment.isAdded()) {
             addFragment(browserFragment);
         } else {
             showFragment(browserFragment);
         }
 
-        if (!(manager.findFragmentById(R.id.fragment) instanceof BrowserFragment)) {
+        if (!(pageList.get(currentPosition) instanceof BrowserFragment)) {
             pageList.set(currentPosition, browserFragment);
         }
+        pageNameChanged(currentPosition,input);
+    }
+
+    private void pageNameChanged(int currentPosition, String input) {
         pageNameList.set(currentPosition,input);
         bottomBar.dataChanged();
     }
@@ -216,31 +221,24 @@ public class BrowserActivity extends AppCompatActivity implements
     @Override
     public void jumpToNewPage(int position) {
         Log.d(TAG, "------------------------------------------");
-        Log.d(TAG, "jumpToNewPage: position是"+position);
-        Log.d(TAG, "jumpToNewPage: 当前的currentPosition是"+currentPosition);
+        Log.d(TAG, "当前的碎片: "+pageList.get(currentPosition));
+        if (!historyFragment.isHidden()){
+            hideFragment(historyFragment);
+        }
         if (currentPosition==position){
             return;
         }else {
+            hideFragment(pageList.get(currentPosition));
             currentPosition = position;
-
-//            Log.d(TAG, "pageNameList.get(currentPosition): "+
-//                    pageNameList.get(currentPosition));
-            Log.d(TAG, "当前的碎片: "+manager.findFragmentById(R.id.fragment));
             if (pageNameList.get(currentPosition).equals("新页面")) {
-//                Log.d(TAG, "aaaaaaaaaaaaaaa");
-                hideFragment(manager.findFragmentById(R.id.fragment));
-                MainFragment mainFragment = new MainFragment();
-                addFragment(mainFragment);
-
-//                Log.d(TAG, "jumpToNewPage: 再次当前的currentPosition是" + currentPosition);
-                if (currentPosition >= pageList.size()) {
+                if (currentPosition>=pageList.size()) {
+                    MainFragment mainFragment = new MainFragment();
+                    addFragment(mainFragment);
                     pageList.add(mainFragment);
-                } else {
-                    pageList.set(currentPosition, mainFragment);
+                }else {
+                    showFragment(pageList.get(currentPosition));
                 }
             }else {
-//                Log.d(TAG, "bbbbbbbbbbbbbbbb");
-                hideFragment(manager.findFragmentById(R.id.fragment));
                 showFragment(pageList.get(currentPosition));
             }
         }
@@ -279,6 +277,7 @@ public class BrowserActivity extends AppCompatActivity implements
     public void home() {
         replaceFragment(new MainFragment());
         searchBar.setSearchBarText(null);
+        pageNameChanged(currentPosition,"主界面");
     }
 
     @Override

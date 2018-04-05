@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.flyingstudio.cumtbrowser.AllButtonListener;
 import com.flyingstudio.cumtbrowser.R;
@@ -41,6 +42,7 @@ public class BottomBar extends LinearLayout implements View.OnClickListener,
     private ImageButton btn_home;
     private ImageButton btn_all_pages;
     private ImageButton btn_settings;
+    private TextView text_page_number;
     private AllButtonListener listener;
     private PopupWindow popupWindow;
     private List<MyButton> buttonList = new ArrayList<>();
@@ -63,6 +65,7 @@ public class BottomBar extends LinearLayout implements View.OnClickListener,
 
     private void initView() {
         pagesAdapter = new PagesAdapter();
+        text_page_number=(TextView)findViewById(R.id.text_page_number);
         btn_back = (ImageButton) findViewById(R.id.btn_back);
         btn_forward = (ImageButton) findViewById(R.id.btn_forward);
         btn_home = (ImageButton) findViewById(R.id.btn_home);
@@ -119,6 +122,9 @@ public class BottomBar extends LinearLayout implements View.OnClickListener,
             @Override
             public void onClick(View v) {
                 pagesList.add("新页面");
+                int i=Integer.parseInt(text_page_number.getText().toString());
+                i++;
+                text_page_number.setText(i+"");
                 pagesAdapter.notifyDataSetChanged();
             }
         });

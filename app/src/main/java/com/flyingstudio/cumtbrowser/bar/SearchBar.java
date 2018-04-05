@@ -60,13 +60,14 @@ public class SearchBar extends LinearLayout implements View.OnClickListener{
                     btn_delete_input.setVisibility(VISIBLE);
                     listener.record();
                     listener.hideButtomBar();
-                    Log.d(TAG, "onFocusChange: 获取焦点");
+                    edit_serach.selectAll();
+//                    Log.d(TAG, "onFocusChange: 获取焦点");
                     //显示其软键盘
                     inputMethodManager.showSoftInput(v,InputMethodManager.SHOW_FORCED);
                 }else {
                     btn_delete_input.setVisibility(GONE);
                     listener.showButtomBar();
-                    Log.d(TAG, "onFocusChange: 没获取焦点");
+//                    Log.d(TAG, "onFocusChange: 没获取焦点");
                     //隐藏软键盘
                     inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),0);
                 }

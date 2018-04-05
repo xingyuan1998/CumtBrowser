@@ -35,15 +35,30 @@
         android:layout_gravity="center_vertical"
         android:src="@drawable/home"/>
 
-    <ImageButton
-        android:id="@+id/btn_all_pages"
+    <FrameLayout
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="30dp"
-        android:scaleType="centerInside"
-        android:background="@null"
-        android:layout_gravity="center_vertical"
-        android:src="@drawable/page"/>
+        android:layout_gravity="center_vertical">
+
+        <ImageButton
+            android:id="@+id/btn_all_pages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerInside"
+            android:background="@null"
+            android:layout_gravity="center"
+            android:src="@drawable/page"/>
+
+        <TextView
+            android:id="@+id/text_page_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+
+
 
     <ImageButton
         android:id="@+id/btn_settings"
