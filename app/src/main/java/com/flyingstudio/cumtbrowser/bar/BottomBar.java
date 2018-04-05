@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -12,6 +13,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -19,6 +21,7 @@ import android.widget.PopupWindow;
 import com.flyingstudio.cumtbrowser.AllButtonListener;
 import com.flyingstudio.cumtbrowser.R;
 import com.flyingstudio.cumtbrowser.adapter.ButtonAdapter;
+import com.flyingstudio.cumtbrowser.adapter.PagesAdapter;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -30,7 +33,9 @@ import static android.content.ContentValues.TAG;
  * Created by MEzzsy on 2018/3/24.
  */
 
-public class BottomBar extends LinearLayout implements View.OnClickListener {
+public class BottomBar extends LinearLayout implements View.OnClickListener,
+        PagesAdapter.JumpListener {
+
     private ImageButton btn_back;
     private ImageButton btn_forward;
     private ImageButton btn_home;
@@ -39,6 +44,8 @@ public class BottomBar extends LinearLayout implements View.OnClickListener {
     private AllButtonListener listener;
     private PopupWindow popupWindow;
     private List<MyButton> buttonList = new ArrayList<>();
+    private List<String> pagesList;
+    private PagesAdapter pagesAdapter;
 
     public BottomBar(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -46,7 +53,16 @@ public class BottomBar extends LinearLayout implements View.OnClickListener {
         initView();
     }
 
+    public void setPagesList(List<String> pagesList) {
+        this.pagesList = pagesList;
+    }
+
+    public void dataChanged() {
+        pagesAdapter.notifyDataSetChanged();
+    }
+
     private void initView() {
+        pagesAdapter = new PagesAdapter();
         btn_back = (ImageButton) findViewById(R.id.btn_back);
         btn_forward = (ImageButton) findViewById(R.id.btn_forward);
         btn_home = (ImageButton) findViewById(R.id.btn_home);
@@ -73,6 +89,8 @@ public class BottomBar extends LinearLayout implements View.OnClickListener {
                 listener.home();
                 break;
             case R.id.btn_all_pages:
+                pagesAdapter.setPagesList(pagesList);
+                showPages();
                 listener.pages();
                 break;
             case R.id.btn_settings:
@@ -83,8 +101,48 @@ public class BottomBar extends LinearLayout implements View.OnClickListener {
         }
     }
 
+    private void showPages() {
+        //设置contentView
+        View contentView = LayoutInflater.from(getContext()).
+                inflate(R.layout.popuplayout_pages, null);
+
+        popupWindow = new PopupWindow(contentView,
+                LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setContentView(contentView);
+
+        //初始化RecyclerView
+        RecyclerView recyclerView = (RecyclerView) contentView.
+                findViewById(R.id.recycler_view_page);
+        Button btn_add_new_page = (Button) contentView.findViewById(R.id.btn_add_new_page);
+
+        btn_add_new_page.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pagesList.add("新页面");
+                pagesAdapter.notifyDataSetChanged();
+            }
+        });
+
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(manager);
+        pagesAdapter.setJumpListener(this);
+        recyclerView.setAdapter(pagesAdapter);
+
+        //显示PopupWindow
+        popupWindow.setAnimationStyle(R.style.PopupAnimation);
+
+        //适配高度
+        int currentHeight = 20;
+        if (checkDeviceHasNavigationBar2(getContext())) {
+            currentHeight += this.getHeight() + getNavigationBarHeight();
+        } else {
+            currentHeight += this.getHeight();
+        }
+        Log.d(TAG, "showSettings: " + checkDeviceHasNavigationBar2(getContext()));
+        popupWindow.showAtLocation(this, Gravity.BOTTOM, 0, currentHeight);
+    }
+
     private void showSettings() {
-//        this.setVisibility(GONE);
         //设置contentView
         View contentView = LayoutInflater.from(getContext()).
                 inflate(R.layout.popuplayout, null);
@@ -107,7 +165,6 @@ public class BottomBar extends LinearLayout implements View.OnClickListener {
         recyclerView.setAdapter(adapter);
 
         //显示PopupWindow
-//        popupWindow.showAtLocation(this,Gravity.BOTTOM, 0, this.getHeight()+150);
         popupWindow.setAnimationStyle(R.style.PopupAnimation);
 
         //适配高度
@@ -119,9 +176,6 @@ public class BottomBar extends LinearLayout implements View.OnClickListener {
         }
         Log.d(TAG, "showSettings: " + checkDeviceHasNavigationBar2(getContext()));
         popupWindow.showAtLocation(this, Gravity.BOTTOM, 0, currentHeight);
-
-//        popupWindow.update();
-        Log.d(TAG, "showSettings: " + this.toString() + "\n" + "高度= " + currentHeight);
     }
 
     //判断设备是否有虚拟按键（navifationbar）。
@@ -158,7 +212,6 @@ public class BottomBar extends LinearLayout implements View.OnClickListener {
         return height;
     }
 
-
     private void initButtons() {
         MyButton button1 = new MyButton("UI测试", R.drawable.example);
         buttonList.add(button1);
@@ -182,5 +235,13 @@ public class BottomBar extends LinearLayout implements View.OnClickListener {
         this.listener = listener;
     }
 
+    @Override
+    public void jump(int position) {
+        listener.jumpToNewPage(position);
+    }
 
+    @Override
+    public void hidePopupWindow() {
+        popupWindow.dismiss();
+    }
 }

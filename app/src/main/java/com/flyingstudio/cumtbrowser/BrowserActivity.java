@@ -40,13 +40,19 @@ public class BrowserActivity extends AppCompatActivity implements
     private HistoryFragment historyFragment;//历史记录碎片
     private final static int CODE = 1028;
     private FragmentManager manager = getSupportFragmentManager();
+    private List<String> pageNameList =new ArrayList<>();
+    private List<Fragment> pageList=new ArrayList<>();
+    private static int currentPosition=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browser);
 
-        replaceFragment(new MainFragment());
+        MainFragment mainFragment=new MainFragment();
+        replaceFragment(mainFragment);
+        pageList.add(mainFragment);
+        pageNameList.add("主界面");
 
         //接收上次的历史记录
         SharedPreferences preferences = getSharedPreferences("history",
@@ -65,6 +71,7 @@ public class BrowserActivity extends AppCompatActivity implements
         searchBar.setAllButtonListener(this);
         bottomBar = (BottomBar) findViewById(R.id.bottom_bar);
         bottomBar.setAllButtonListener(this);
+        bottomBar.setPagesList(pageNameList);
         historyFragment = new HistoryFragment(historyRecords);
         historyFragment.setClearHistoryListener(this);
     }
@@ -175,11 +182,6 @@ public class BrowserActivity extends AppCompatActivity implements
         browserFragment = new BrowserFragment(input);
         browserFragment.setOnFragmentInteractionListener(
                 new BrowserFragment.OnFragmentInteractionListener() {
-                    @Override
-                    public void onFragmentInteraction(Uri uri) {
-
-                    }
-
                     //实时地在搜索栏显示当前网址
                     @Override
                     public void changeCurrentUrl(String s) {
@@ -193,6 +195,12 @@ public class BrowserActivity extends AppCompatActivity implements
         } else {
             showFragment(browserFragment);
         }
+
+        if (!(manager.findFragmentById(R.id.fragment) instanceof BrowserFragment)) {
+            pageList.set(currentPosition, browserFragment);
+        }
+        pageNameList.set(currentPosition,input);
+        bottomBar.dataChanged();
     }
 
     @Override
@@ -203,6 +211,40 @@ public class BrowserActivity extends AppCompatActivity implements
     @Override
     public void showButtomBar() {
         bottomBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void jumpToNewPage(int position) {
+        Log.d(TAG, "------------------------------------------");
+        Log.d(TAG, "jumpToNewPage: position是"+position);
+        Log.d(TAG, "jumpToNewPage: 当前的currentPosition是"+currentPosition);
+        if (currentPosition==position){
+            return;
+        }else {
+            currentPosition = position;
+
+//            Log.d(TAG, "pageNameList.get(currentPosition): "+
+//                    pageNameList.get(currentPosition));
+            Log.d(TAG, "当前的碎片: "+manager.findFragmentById(R.id.fragment));
+            if (pageNameList.get(currentPosition).equals("新页面")) {
+//                Log.d(TAG, "aaaaaaaaaaaaaaa");
+                hideFragment(manager.findFragmentById(R.id.fragment));
+                MainFragment mainFragment = new MainFragment();
+                addFragment(mainFragment);
+
+//                Log.d(TAG, "jumpToNewPage: 再次当前的currentPosition是" + currentPosition);
+                if (currentPosition >= pageList.size()) {
+                    pageList.add(mainFragment);
+                } else {
+                    pageList.set(currentPosition, mainFragment);
+                }
+            }else {
+//                Log.d(TAG, "bbbbbbbbbbbbbbbb");
+                hideFragment(manager.findFragmentById(R.id.fragment));
+                showFragment(pageList.get(currentPosition));
+            }
+        }
+        Log.d(TAG, "------------------------------------------");
     }
 
     //历史记录
@@ -216,16 +258,23 @@ public class BrowserActivity extends AppCompatActivity implements
         }
     }
 
+    //向后
     @Override
     public void back() {
-        browserFragment.getWebView().goBack();
+        if (browserFragment.getWebView().canGoBack()) {
+            browserFragment.getWebView().goBack();
+        } else {
+            home();
+        }
     }
 
+    //向前
     @Override
     public void forward() {
         browserFragment.getWebView().goForward();
     }
 
+    //主界面按钮
     @Override
     public void home() {
         replaceFragment(new MainFragment());
@@ -234,8 +283,8 @@ public class BrowserActivity extends AppCompatActivity implements
 
     @Override
     public void pages() {
-        myToast("多窗口");
-        Log.d(TAG, "多窗口");
+//        myToast("多窗口");
+//        Log.d(TAG, "多窗口");
     }
 
     //按钮清空历史记录的逻辑
@@ -261,6 +310,7 @@ public class BrowserActivity extends AppCompatActivity implements
 //        super.onBackPressed();
         searchBar.loseFocus();
 
+        //获取当前的碎片
         Fragment currentFragment = manager.findFragmentById(R.id.fragment);
         Log.d(TAG, "当前的碎片是" + currentFragment.toString());
 
@@ -281,6 +331,7 @@ public class BrowserActivity extends AppCompatActivity implements
             back();
         }
 
+        //如果当前碎片是主界面，那么就退出程序
         if (currentFragment instanceof MainFragment){
             finish();
         }

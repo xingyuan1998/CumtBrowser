@@ -1,25 +1,18 @@
 package com.flyingstudio.cumtbrowser.fragment;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.flyingstudio.cumtbrowser.R;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * 网页的碎片
@@ -95,12 +88,6 @@ public class BrowserFragment extends Fragment {
         return view;
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onDetach() {
         super.onDetach();
@@ -112,7 +99,6 @@ public class BrowserFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
         void changeCurrentUrl(String s);
     }
 }
