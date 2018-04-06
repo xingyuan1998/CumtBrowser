@@ -329,33 +329,21 @@ public class BrowserActivity extends AppCompatActivity implements SearchListener
     @Override
     public void onBackPressed() {
         searchBar.loseFocus();
-        web_view_page.setCurrentItem(currentPosition);
-        Log.d(TAG, "-------------------------");
-        Log.d(TAG, "currentPosition: "+currentPosition);
-        Log.d(TAG, "manager.findFragmentById(R.id.web_view_page)): "+
-                manager.findFragmentById(R.id.web_view_page));
-        if (manager.findFragmentById(R.id.web_view_page)instanceof WebFragment){
+        String tag="android:switcher:" + R.id.web_view_page + ":"
+                + web_view_page.getCurrentItem()+"";
+//        Log.d(TAG, "web_view_page.getCurrentItem(): "+web_view_page.getCurrentItem());
+        Fragment fragment=manager.findFragmentByTag(tag);
+        if (fragment instanceof HistoryFragment) {
+            web_view_page.setCurrentItem(currentPosition);
+        }else {
             ((WebFragment) pageList.get(currentPosition)).myOnBackPressed();
+
         }
     }
 
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            exit();
-//            return true;
-//        }
-//        return super.onKeyDown(keyCode, event);
-//    }
-//
-//    private void exit() {
-//        if ((System.currentTimeMillis() - exitTime) > 2000) {
-//            myToast("再按一次退出程序");
-//            exitTime = System.currentTimeMillis();
-//        } else {
-//            finish();
-//        }
-//    }
+    private long exitTime=0;
+
+
 
     public void setWebListener(WebListener listener){
         this.listener=listener;

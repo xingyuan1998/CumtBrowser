@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.flyingstudio.cumtbrowser.BrowserActivity;
 import com.flyingstudio.cumtbrowser.R;
@@ -137,7 +138,20 @@ public class WebFragment extends Fragment implements WebListener,
         if (manager.findFragmentById(R.id.fragment)instanceof BrowserFragment){
             webBack();
         }else {
-            browserActivity.finish();
+            exit();
         }
     }
+
+    private long exitTime=0;
+
+    private void exit() {
+        if ((System.currentTimeMillis() - exitTime) > 1500) {
+            Toast.makeText(getContext(),"再按一次退出程序", Toast.LENGTH_SHORT).show();
+            exitTime = System.currentTimeMillis();
+        } else {
+            browserActivity.finish();
+            System.exit(0);
+        }
+    }
+
 }
