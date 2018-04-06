@@ -13,8 +13,11 @@ import android.widget.Toast;
 import com.flyingstudio.cumtbrowser.R;
 import com.flyingstudio.cumtbrowser.activity.AboutUs;
 import com.flyingstudio.cumtbrowser.bar.MyButton;
+import com.flyingstudio.cumtbrowser.bar.SearchBar;
 
 import java.util.List;
+
+import static com.flyingstudio.cumtbrowser.BrowserActivity.searchBar;
 
 /**
  * Created by MEzzsy on 2018/4/6.
@@ -51,8 +54,8 @@ public class NavButtonAdapter extends RecyclerView.Adapter<NavButtonAdapter.View
             @Override
             public void onClick(View v) {
                 int i = holder.getAdapterPosition();
-                String uri = buttonList.get(i).getUrl().trim();
-
+                String url = buttonList.get(i).getUrl().trim();
+                searchBar.onClickNavButton(url);
             }
         });
         return holder;

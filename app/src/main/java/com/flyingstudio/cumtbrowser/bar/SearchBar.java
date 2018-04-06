@@ -199,6 +199,11 @@ public class SearchBar extends LinearLayout implements View.OnClickListener{
         }
     }
 
+    public void onClickNavButton(String url){
+        edit_serach.setText(url);
+        listener.access(url);
+    }
+
     public void setSearchListener(SearchListener listener) {
         this.listener=listener;
     }

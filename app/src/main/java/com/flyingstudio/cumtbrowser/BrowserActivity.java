@@ -34,7 +34,7 @@ public class BrowserActivity extends AppCompatActivity implements SearchListener
         BottomListener, HistoryFragment.clearHistoryListener,
         FeedBackListener{
     private static final String TAG = "BrowserActivity";
-    private SearchBar searchBar;//搜索栏
+    public static SearchBar searchBar;//搜索栏
     public static BottomBar bottomBar;//底部导航栏
     private List<String> historyRecords = new ArrayList<>();//历史记录的列表
     private HistoryFragment historyFragment;//历史记录碎片
