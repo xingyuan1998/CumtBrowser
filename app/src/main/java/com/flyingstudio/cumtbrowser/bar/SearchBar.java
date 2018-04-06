@@ -14,8 +14,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.flyingstudio.cumtbrowser.AllButtonListener;
+import com.flyingstudio.cumtbrowser.interfaces.BottomListener;
 import com.flyingstudio.cumtbrowser.R;
+import com.flyingstudio.cumtbrowser.interfaces.SearchListener;
 
 import static android.content.ContentValues.TAG;
 
@@ -33,7 +34,7 @@ public class SearchBar extends LinearLayout implements View.OnClickListener{
     private Button btn_refresh;
     private EditText edit_serach;
     private String input="";
-    private AllButtonListener listener;
+    private SearchListener listener;
     private InputMethodManager inputMethodManager = (InputMethodManager) getContext().
                     getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -63,7 +64,8 @@ public class SearchBar extends LinearLayout implements View.OnClickListener{
                     btn_cancel.setVisibility(VISIBLE);
 
                     listener.record();
-                    listener.hideButtomBar();
+                    listener.onFocus();
+//                    listener2.hideButtomBar();
                     edit_serach.selectAll();
 
                     //显示其软键盘
@@ -74,8 +76,9 @@ public class SearchBar extends LinearLayout implements View.OnClickListener{
                     btn_baidu.setVisibility(GONE);
                     btn_cancel.setVisibility(GONE);
                     btn_refresh.setVisibility(VISIBLE);
+                    listener.loseFocus();
 
-                    listener.showButtomBar();
+//                    listener2.showButtomBar();
 
                     //隐藏软键盘
                     inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),0);
@@ -197,7 +200,7 @@ public class SearchBar extends LinearLayout implements View.OnClickListener{
         }
     }
 
-    public void setAllButtonListener(AllButtonListener listener) {
+    public void setSearchListener(SearchListener listener) {
         this.listener=listener;
     }
 

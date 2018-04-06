@@ -13,12 +13,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/serach_bar" />
 
-    <FrameLayout
-        android:id="@+id/fragment"
+    <com.flyingstudio.cumtbrowser.util.MyViewPager
+        android:id="@+id/web_view_page"
         android:layout_width="match_parent"
         android:layout_weight="10"
-        android:layout_height="0dp">
-    </FrameLayout>
+        android:layout_height="0dp"/>
 
     <com.flyingstudio.cumtbrowser.bar.BottomBar
         android:layout_width="match_parent"

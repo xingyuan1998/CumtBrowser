@@ -88,12 +88,6 @@ public class BrowserFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
     public void setOnFragmentInteractionListener(OnFragmentInteractionListener listener){
         mListener=listener;
     }

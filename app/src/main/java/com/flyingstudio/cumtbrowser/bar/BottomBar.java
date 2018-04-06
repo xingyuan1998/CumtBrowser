@@ -19,7 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.flyingstudio.cumtbrowser.AllButtonListener;
+import com.flyingstudio.cumtbrowser.interfaces.BottomListener;
 import com.flyingstudio.cumtbrowser.R;
 import com.flyingstudio.cumtbrowser.adapter.ButtonAdapter;
 import com.flyingstudio.cumtbrowser.adapter.PagesAdapter;
@@ -43,7 +43,7 @@ public class BottomBar extends LinearLayout implements View.OnClickListener,
     private ImageButton btn_all_pages;
     private ImageButton btn_settings;
     private TextView text_page_number;
-    private AllButtonListener listener;
+    private BottomListener listener;
     private PopupWindow popupWindow;
     private List<MyButton> buttonList = new ArrayList<>();
     private List<String> pagesList;
@@ -237,7 +237,7 @@ public class BottomBar extends LinearLayout implements View.OnClickListener,
         buttonList.add(button8);
     }
 
-    public void setAllButtonListener(AllButtonListener listener) {
+    public void setBottomListener(BottomListener listener) {
         this.listener = listener;
     }
 
