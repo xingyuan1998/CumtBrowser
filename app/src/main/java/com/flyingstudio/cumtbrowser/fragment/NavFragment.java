@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flyingstudio.cumtbrowser.R;
-import com.flyingstudio.cumtbrowser.adapter.ButtonAdapter;
+import com.flyingstudio.cumtbrowser.adapter.NavButtonAdapter;
 import com.flyingstudio.cumtbrowser.bar.MyButton;
 
 import java.util.ArrayList;
@@ -47,19 +47,24 @@ public class NavFragment extends Fragment {
                 view.findViewById(R.id.navigation_recycler_view);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4);
         recyclerView.setLayoutManager(gridLayoutManager);
-        ButtonAdapter adapter=new ButtonAdapter(myButtons,getContext());
+        NavButtonAdapter adapter = new NavButtonAdapter(myButtons, getContext());
         recyclerView.setAdapter(adapter);
         return view;
     }
 
     private void initButtons(){
         MyButton button_baidu=new MyButton("百度",R.drawable.baidu);
+        button_baidu.setUrl("https://www.baidu.com");
         myButtons.add(button_baidu);
         MyButton button_taoba=new MyButton("淘宝",R.drawable.taobao);
+        button_taoba.setUrl("https://h5.m.taobao.com/#index");
         myButtons.add(button_taoba);
         MyButton button_cumt=new MyButton("矿大",R.drawable.cumt);
+        button_cumt.setUrl("http://www.cumt.edu.cn/");
         myButtons.add(button_cumt);
         MyButton button_atcumt=new MyButton("学生在线",R.drawable.atcumt);
+        button_atcumt.setUrl("https://atcumt.com/");
         myButtons.add(button_atcumt);
     }
+
 }

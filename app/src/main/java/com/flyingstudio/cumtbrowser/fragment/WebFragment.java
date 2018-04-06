@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +13,8 @@ import android.widget.Toast;
 
 import com.flyingstudio.cumtbrowser.BrowserActivity;
 import com.flyingstudio.cumtbrowser.R;
-import com.flyingstudio.cumtbrowser.interfaces.BottomListener;
 import com.flyingstudio.cumtbrowser.interfaces.FeedBackListener;
 import com.flyingstudio.cumtbrowser.interfaces.WebListener;
-
-import static android.content.ContentValues.TAG;
-import static com.flyingstudio.cumtbrowser.BrowserActivity.bottomBar;
-import static com.flyingstudio.cumtbrowser.BrowserActivity.currentPosition;
 
 /**
  * Created by MEzzsy on 2018/4/6.

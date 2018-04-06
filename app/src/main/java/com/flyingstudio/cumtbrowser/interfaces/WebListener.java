@@ -7,10 +7,7 @@ package com.flyingstudio.cumtbrowser.interfaces;
 public interface WebListener {
     void accessToWeb(String input);
     void webRefresh();
-
     void webBack();
-
     void webForward();
-
     void webHome();
 }

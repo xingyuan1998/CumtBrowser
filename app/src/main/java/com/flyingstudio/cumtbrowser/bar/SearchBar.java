@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.flyingstudio.cumtbrowser.interfaces.BottomListener;
 import com.flyingstudio.cumtbrowser.R;
 import com.flyingstudio.cumtbrowser.interfaces.SearchListener;
 

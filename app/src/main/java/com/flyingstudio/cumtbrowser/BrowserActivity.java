@@ -6,26 +6,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
-import com.flyingstudio.cumtbrowser.adapter.FragmentAdapter;
 import com.flyingstudio.cumtbrowser.adapter.WebFragmentAdapter;
 import com.flyingstudio.cumtbrowser.bar.BottomBar;
 import com.flyingstudio.cumtbrowser.bar.SearchBar;
-import com.flyingstudio.cumtbrowser.fragment.BrowserFragment;
 import com.flyingstudio.cumtbrowser.fragment.HistoryFragment;
-import com.flyingstudio.cumtbrowser.fragment.MainFragment;
 import com.flyingstudio.cumtbrowser.fragment.WebFragment;
 import com.flyingstudio.cumtbrowser.interfaces.BottomListener;
 import com.flyingstudio.cumtbrowser.interfaces.FeedBackListener;
@@ -331,7 +324,6 @@ public class BrowserActivity extends AppCompatActivity implements SearchListener
         searchBar.loseFocus();
         String tag="android:switcher:" + R.id.web_view_page + ":"
                 + web_view_page.getCurrentItem()+"";
-//        Log.d(TAG, "web_view_page.getCurrentItem(): "+web_view_page.getCurrentItem());
         Fragment fragment=manager.findFragmentByTag(tag);
         if (fragment instanceof HistoryFragment) {
             web_view_page.setCurrentItem(currentPosition);
@@ -340,10 +332,6 @@ public class BrowserActivity extends AppCompatActivity implements SearchListener
 
         }
     }
-
-    private long exitTime=0;
-
-
 
     public void setWebListener(WebListener listener){
         this.listener=listener;

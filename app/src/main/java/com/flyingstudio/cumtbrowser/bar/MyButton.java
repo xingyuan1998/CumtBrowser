@@ -7,6 +7,15 @@ package com.flyingstudio.cumtbrowser.bar;
 public class MyButton {
     private String text;
     private int imageId;
+    private String url;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public MyButton(String text, int imageId) {
         this.text = text;

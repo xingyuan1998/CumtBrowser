@@ -4,8 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.flyingstudio.cumtbrowser.fragment.WebFragment;
-
 import java.util.List;
 
 /**

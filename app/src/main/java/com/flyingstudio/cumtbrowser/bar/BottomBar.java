@@ -19,10 +19,10 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.flyingstudio.cumtbrowser.interfaces.BottomListener;
 import com.flyingstudio.cumtbrowser.R;
 import com.flyingstudio.cumtbrowser.adapter.ButtonAdapter;
 import com.flyingstudio.cumtbrowser.adapter.PagesAdapter;
+import com.flyingstudio.cumtbrowser.interfaces.BottomListener;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -249,5 +249,10 @@ public class BottomBar extends LinearLayout implements View.OnClickListener,
     @Override
     public void hidePopupWindow() {
         popupWindow.dismiss();
+    }
+
+    @Override
+    public void showNumbers(int number) {
+        text_page_number.setText(number+"");
     }
 }
