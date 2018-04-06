@@ -21,7 +21,7 @@ import java.util.List;
 
 public class NavFragment extends Fragment {
 
-    private List<MyButton> myButtons=myButtons=new ArrayList<>();;
+    private List<MyButton> myButtons=new ArrayList<>();;
 
     public NavFragment() {
         initButtons();
@@ -47,7 +47,7 @@ public class NavFragment extends Fragment {
                 view.findViewById(R.id.navigation_recycler_view);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4);
         recyclerView.setLayoutManager(gridLayoutManager);
-        ButtonAdapter adapter=new ButtonAdapter(myButtons);
+        ButtonAdapter adapter=new ButtonAdapter(myButtons,getContext());
         recyclerView.setAdapter(adapter);
         return view;
     }

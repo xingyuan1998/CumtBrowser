@@ -176,10 +176,12 @@ public class BrowserActivity extends AppCompatActivity implements
     //按钮访问的逻辑
     @Override
     public void access(String input) {
+        searchBar.hideBtnCancel();
         if (!historyRecords.contains(input)) {
             historyRecords.add(0, input);//使最新的记录放在最开头
             historyFragment.dataChanged();
         }
+
         browserFragment = new BrowserFragment(input);
         browserFragment.setOnFragmentInteractionListener(
                 new BrowserFragment.OnFragmentInteractionListener() {
@@ -187,6 +189,7 @@ public class BrowserActivity extends AppCompatActivity implements
                     @Override
                     public void changeCurrentUrl(String s) {
                         searchBar.setSearchBarText(s);
+                        pageNameChanged(currentPosition,s);
                     }
                 });
 
@@ -235,14 +238,21 @@ public class BrowserActivity extends AppCompatActivity implements
                     MainFragment mainFragment = new MainFragment();
                     addFragment(mainFragment);
                     pageList.add(mainFragment);
+                    searchBar.setSearchBarText(null);
                 }else {
                     showFragment(pageList.get(currentPosition));
                 }
             }else {
                 showFragment(pageList.get(currentPosition));
+                searchBar.setSearchBarText(pageNameList.get(currentPosition));
             }
         }
         Log.d(TAG, "------------------------------------------");
+    }
+
+    @Override
+    public void refresh() {
+        browserFragment.getWebView().reload();
     }
 
     //历史记录

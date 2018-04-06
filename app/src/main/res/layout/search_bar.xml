@@ -70,4 +70,13 @@
         android:textColor="#000"
         android:background="@null"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_refresh"
+        android:visibility="gone"
+        android:text="刷新"
+        android:textColor="#000"
+        android:background="@null"/>
+
 </LinearLayout>

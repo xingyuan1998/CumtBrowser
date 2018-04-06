@@ -30,6 +30,7 @@ public class SearchBar extends LinearLayout implements View.OnClickListener{
     private Button btn_baidu;
     private Button btn_access;
     private Button btn_code2d;
+    private Button btn_refresh;
     private EditText edit_serach;
     private String input="";
     private AllButtonListener listener;
@@ -58,16 +59,24 @@ public class SearchBar extends LinearLayout implements View.OnClickListener{
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus){
                     btn_delete_input.setVisibility(VISIBLE);
+                    btn_refresh.setVisibility(GONE);
+                    btn_cancel.setVisibility(VISIBLE);
+
                     listener.record();
                     listener.hideButtomBar();
                     edit_serach.selectAll();
-//                    Log.d(TAG, "onFocusChange: 获取焦点");
+
                     //显示其软键盘
                     inputMethodManager.showSoftInput(v,InputMethodManager.SHOW_FORCED);
                 }else {
                     btn_delete_input.setVisibility(GONE);
+                    btn_access.setVisibility(GONE);
+                    btn_baidu.setVisibility(GONE);
+                    btn_cancel.setVisibility(GONE);
+                    btn_refresh.setVisibility(VISIBLE);
+
                     listener.showButtomBar();
-//                    Log.d(TAG, "onFocusChange: 没获取焦点");
+
                     //隐藏软键盘
                     inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),0);
                 }
@@ -77,29 +86,44 @@ public class SearchBar extends LinearLayout implements View.OnClickListener{
         edit_serach.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//                Log.d(TAG, "beforeTextChanged: 输入开始");
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                Log.d(TAG, "beforeTextChanged: 输入中");
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                btn_refresh.setVisibility(GONE);
+                btn_cancel.setVisibility(GONE);
+
                 input=edit_serach.getText().toString();
                 if (Patterns.WEB_URL.matcher(input).matches()){
                     btn_cancel.setVisibility(GONE);
-                    btn_access.setVisibility(VISIBLE);
                     btn_baidu.setVisibility(GONE);
+//                    btn_access.setVisibility(VISIBLE);
+                    if (edit_serach.hasFocus()) {
+                        btn_access.setVisibility(VISIBLE);
+                        btn_refresh.setVisibility(GONE);
+                    }else {
+                        btn_refresh.setVisibility(VISIBLE);
+                        btn_access.setVisibility(GONE);
+                    }
                 }else {
                     btn_cancel.setVisibility(GONE);
                     btn_access.setVisibility(GONE);
-                    btn_baidu.setVisibility(VISIBLE);
+                    if (edit_serach.hasFocus()) {
+                        btn_baidu.setVisibility(VISIBLE);
+                        btn_refresh.setVisibility(GONE);
+                    }else {
+                        btn_refresh.setVisibility(VISIBLE);
+                        btn_baidu.setVisibility(GONE);
+                    }
                 }
                 if (input.isEmpty()){
                     btn_baidu.setVisibility(GONE);
                     btn_cancel.setVisibility(VISIBLE);
+                    btn_refresh.setVisibility(GONE);
                 }
 //                Log.d(TAG, "beforeTextChanged: 输入结束");
             }
@@ -116,6 +140,7 @@ public class SearchBar extends LinearLayout implements View.OnClickListener{
         btn_baidu=(Button)findViewById(R.id.btn_baidu);
         btn_access=(Button)findViewById(R.id.btn_access);
         btn_code2d=(Button)findViewById(R.id.btn_code2d);
+        btn_refresh=(Button)findViewById(R.id.btn_refresh);
         edit_serach=(EditText)findViewById(R.id.edit_serach);
         edit_serach.clearFocus();
         btn_delete_input.setOnClickListener(this);
@@ -124,11 +149,19 @@ public class SearchBar extends LinearLayout implements View.OnClickListener{
         btn_access.setOnClickListener(this);
         btn_code2d.setOnClickListener(this);
         edit_serach.setOnClickListener(this);
+        btn_refresh.setOnClickListener(this);
+    }
+
+    public void hideBtnCancel(){
+        btn_cancel.setVisibility(GONE);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            case R.id.btn_refresh:
+                listener.refresh();
+                break;
             case R.id.edit_serach:
                 edit_serach.setFocusable(true);//设置输入框可聚集
                 edit_serach.setFocusableInTouchMode(true);//设置触摸聚焦
@@ -143,7 +176,6 @@ public class SearchBar extends LinearLayout implements View.OnClickListener{
                 edit_serach.setText("");
                 break;
             case R.id.btn_cancel:
-//                Toast.makeText(getContext(),"取消",Toast.LENGTH_SHORT).show();
                 listener.cancel();
                 edit_serach.setFocusable(false);
                 break;

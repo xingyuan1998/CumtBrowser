@@ -167,7 +167,7 @@ public class BottomBar extends LinearLayout implements View.OnClickListener,
         RecyclerView recyclerView = (RecyclerView) contentView.findViewById(R.id.recycler_view);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4);
         recyclerView.setLayoutManager(gridLayoutManager);
-        ButtonAdapter adapter = new ButtonAdapter(buttonList);
+        ButtonAdapter adapter = new ButtonAdapter(buttonList,getContext());
         recyclerView.setAdapter(adapter);
 
         //显示PopupWindow
@@ -219,7 +219,7 @@ public class BottomBar extends LinearLayout implements View.OnClickListener,
     }
 
     private void initButtons() {
-        MyButton button1 = new MyButton("UI测试", R.drawable.example);
+        MyButton button1 = new MyButton("关于我们", R.drawable.about);
         buttonList.add(button1);
         MyButton button2 = new MyButton("UI测试", R.drawable.example);
         buttonList.add(button2);

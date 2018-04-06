@@ -16,4 +16,5 @@ public interface AllButtonListener {
     void hideButtomBar();//隐藏底部导航栏
     void showButtomBar();//显示底部导航栏
     void jumpToNewPage(int position);//跳到新的页面
+    void refresh();
 }

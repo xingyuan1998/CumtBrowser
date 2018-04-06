@@ -1,5 +1,7 @@
 package com.flyingstudio.cumtbrowser.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flyingstudio.cumtbrowser.R;
+import com.flyingstudio.cumtbrowser.activity.AboutUs;
 import com.flyingstudio.cumtbrowser.bar.MyButton;
 
 import java.util.List;
@@ -20,6 +23,7 @@ import java.util.List;
 
 public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ViewHolder> {
     private List<MyButton> buttonList;
+    private Context context;
 
     static class ViewHolder extends RecyclerView.ViewHolder{
         View buttonView;
@@ -34,8 +38,9 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ViewHolder
         }
     }
 
-    public ButtonAdapter(List<MyButton> buttonList) {
+    public ButtonAdapter(List<MyButton> buttonList,Context context) {
         this.buttonList = buttonList;
+        this.context=context;
     }
 
     @Override
@@ -47,8 +52,13 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.ViewHolder
             @Override
             public void onClick(View v) {
                 int i=holder.getAdapterPosition();
-                MyButton button=buttonList.get(i);
-                Toast.makeText(v.getContext(),button.getText(),Toast.LENGTH_SHORT).show();
+                String content=buttonList.get(i).getText().trim();
+                if (content.equals("关于我们")){
+                    Intent intent=new Intent(context,AboutUs.class);
+                    context.startActivity(intent);
+                }else if (content.equals("UI测试")) {
+                    Toast.makeText(v.getContext(), content, Toast.LENGTH_SHORT).show();
+                }
             }
         });
         return holder;
