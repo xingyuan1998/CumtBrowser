@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
 
 import com.flyingstudio.cumtbrowser.R;
 
@@ -24,6 +25,7 @@ public class BrowserFragment extends Fragment {
     private String mParam2;
     private OnFragmentInteractionListener mListener;
     private String input;
+    private LinearLayout agentWebParent;
 
     public BrowserFragment() {
     }

@@ -76,17 +76,25 @@ public class WebFragment extends Fragment implements WebListener,
 
     @Override
     public void webBack() {
-        if (browserFragment.getWebView().canGoBack()){
-            browserFragment.getWebView().goBack();
-        }else {
-            webHome();
+        if (manager.findFragmentById(R.id.fragment) instanceof BrowserFragment) {
+            if (browserFragment.getWebView().canGoBack()) {
+                browserFragment.getWebView().goBack();
+            } else {
+                webHome();
+            }
+        } else {
+            return;
         }
     }
 
     @Override
     public void webForward() {
-        if (browserFragment.getWebView().canGoForward()){
-            browserFragment.getWebView().goForward();
+        if (manager.findFragmentById(R.id.fragment) instanceof BrowserFragment) {
+            if (browserFragment.getWebView().canGoForward()) {
+                browserFragment.getWebView().goForward();
+            } else {
+                return;
+            }
         }else {
             return;
         }
